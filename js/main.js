@@ -2,19 +2,13 @@
 const formulario = document.getElementById('ingreso-persona');
 const botonEliminarTodasLasFilas = document.getElementById('deleteall');
 const tabla = document.getElementById('tabla');
-const tablaTBody = tabla.getElementsByTagName('tbody')[0];
-const rolPersonalInput = document.getElementById('personalRadio')
-const rolHuespedInput = document.getElementById('huespedRadio')
-const valorRolInput = document.querySelector('input[name="inlineRadioOptions"]:checked')?.value;
-const nombreInput = document.getElementById('nombre');
-const edadInput = document.getElementById('edad');
 const botonRegistrar = document.getElementById('botonRegistrar');
 const botonGuardarEdicion = document.getElementById('botonGuardarEdicion');
 const personas = JSON.parse(localStorage.getItem('personas')) || [];
+const fechaInput = document.getElementById('fechaIngreso');
+
 
 // Bloque fechas
-
-const fechaInput = document.getElementById('fechaIngreso');
 
 var ahora = new Date();
 
@@ -26,6 +20,7 @@ var hoy = ahora.getFullYear()+"-"+(mes)+"-"+(dia) ;
 fechaInput.value = hoy;
 
 // Bloque form y lista
+
 botonGuardarEdicion.setAttribute('style', 'visibility:hidden !important;display:none !important');
 
 const reiniciar_valores_radio = () => {
@@ -42,7 +37,8 @@ function limpiarCampos() {
     formulario.nombre.value = "";
     formulario.edad.value = "";
     reiniciar_valores_radio();
-    fechaInput.value = hoy;
+    formulario.fechaIngreso.value = hoy;
+
 };
 
 // const para mostrar o ocultar lista
@@ -72,7 +68,7 @@ function borrarTabla() {
         localStorage.clear();
         botonBorradoListaEsVisible();
         listaEsVisible();
-        fechaInput.value = hoy;
+        formulario.fechaIngreso.value = hoy;
 }
 
 // const para agregar fila nueva a la tabla
@@ -159,10 +155,13 @@ function guardarRegistro(nombre){
         }
     })
     localStorage.setItem('personas', JSON.stringify(personas));
+    
+    // TENGO QUE DEBUGGEAR EL PORQUE SE BUGGEA CUANDO ESTA FUNCION SE LLAMA
+    // limpiarCampos();
+
     mostrarPersonas();
     botonRegistrar.setAttribute('style', 'visibility:visible !important;display:block !important');
     botonGuardarEdicion.setAttribute('style', 'visibility:hidden !important;display:none !important');
-    limpiarCampos();
 
     if (guardarRegistro) {
         Swal.fire(
@@ -172,6 +171,7 @@ function guardarRegistro(nombre){
         )
     }
 }
+
 
 //FORMULARIO REGISTRO
 formulario.addEventListener('submit', (e) => {
