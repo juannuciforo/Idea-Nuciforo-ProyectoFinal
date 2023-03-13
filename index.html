@@ -52,6 +52,13 @@
           <label for="fechaIngreso" class="form-label">Fecha de ingreso:</label
           ><input type="date" name="fechaIngreso" class="form-control" id="fechaIngreso" required />
         </div>
+        <div class="mb-3">
+          <label for="pais" class="form-label">País:</label
+          >
+          <select id="pais" name="pais" class="form-control">
+            <option hidden selected>Selecciona un país</option>
+          </select>
+        </div>
         <button type="submit" class="btn btn-primary mb-3" id="botonRegistrar">
           Registrar
         </button>
@@ -71,6 +78,7 @@
             <th>Nombre</th>
             <th>Edad</th>
             <th>Fecha Ingreso</th>
+            <th>País</th>
             <th>Acciones</th>
           </tr>
         </thead>

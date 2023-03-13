@@ -8,6 +8,28 @@ const personas = JSON.parse(localStorage.getItem('personas')) || [];
 const fechaInput = document.getElementById('fechaIngreso');
 
 
+// Bloque fetch Api y Json
+
+const selectDropdownPaises = document.getElementById('pais');
+
+document.addEventListener('DOMContentLoaded', () => {
+    
+    fetch('https://restcountries.com/v3.1/all').then(response => {
+        return response.json();
+    }).then(data => {
+        let output = "";
+        data.forEach(country => {
+            output += `<option>${country.name.common.toString()}</option>`;
+        })
+
+        const placeHolderSelectPaises = `<option hidden selected>Selecciona un país</option>`
+    
+        selectDropdownPaises.innerHTML = placeHolderSelectPaises + output;
+    })
+
+})
+
+
 // Bloque fechas
 
 var ahora = new Date();
@@ -18,6 +40,7 @@ var mes = ("0" + (ahora.getMonth() + 1)).slice(-2);
 var hoy = ahora.getFullYear()+"-"+(mes)+"-"+(dia) ;
 
 fechaInput.value = hoy;
+
 
 // Bloque form y lista
 
@@ -32,16 +55,21 @@ const reiniciar_valores_radio = () => {
     }
 }
 
+
 //FUNCTION PARA LIMPIAR CAMPOS DESPUES DE CARGAR
+
 function limpiarCampos() {
     formulario.nombre.value = "";
     formulario.edad.value = "";
     reiniciar_valores_radio();
     formulario.fechaIngreso.value = hoy;
+    selectDropdownPaises.value = "Selecciona un país";
 
 };
 
+
 // const para mostrar o ocultar lista
+
 const listaEsVisible = () => {
     if (personas.length > 0) {
         tabla.setAttribute('style', 'visibility:visible !important')
@@ -51,7 +79,9 @@ const listaEsVisible = () => {
 }
 listaEsVisible();
 
+
 // const para ocultar o mostrar botón que borra la lista
+
 const botonBorradoListaEsVisible = () => {
     if (personas.length > 1) {
         botonEliminarTodasLasFilas.setAttribute('style', 'visibility:visible !important');
@@ -63,6 +93,7 @@ botonBorradoListaEsVisible();
 
 
 //function para borrar tabla
+
 function borrarTabla() {
         personas.length = 0;
         localStorage.clear();
@@ -71,7 +102,9 @@ function borrarTabla() {
         formulario.fechaIngreso.value = hoy;
 }
 
+
 // const para agregar fila nueva a la tabla
+
 const mostrarPersonas = () => {
     const tableBody = document.getElementById('tbody');
     tableBody.innerHTML = "";
@@ -83,6 +116,7 @@ const mostrarPersonas = () => {
             <td>${p.nombre}</td>
             <td>${p.edad}</td>
             <td>${p.fechaIngreso}</td>
+            <td>${p.pais}</td>
             <td><button class="btn-edit btn btn-info" id="${p.nombre}">Editar</button>
             <button class="btn-delete btn btn-danger" id="${p.nombre}">Borrar</button></td>
         `;
@@ -112,7 +146,7 @@ function editarRegistro(e){
     formulario.edad.value = personaEncontrada.edad;
     formulario.inlineRadioOptions.value = personaEncontrada.rol;
     formulario.fechaIngreso.value = personaEncontrada.fechaIngreso;
-
+    formulario.pais.value = personaEncontrada.pais;
 
     botonRegistrar.setAttribute('style', 'visibility:hidden !important;display:none !important');
     botonGuardarEdicion.setAttribute('style', 'visibility:visible !important;display:block !important');
@@ -152,12 +186,10 @@ function guardarRegistro(nombre){
             p.edad = formulario.edad.value;
             p.rol = formulario.inlineRadioOptions.value;
             p.fechaIngreso = formulario.fechaIngreso.value;
+            p.pais = formulario.pais.value;
         }
     })
     localStorage.setItem('personas', JSON.stringify(personas));
-    
-    // TENGO QUE DEBUGGEAR EL PORQUE SE BUGGEA CUANDO ESTA FUNCION SE LLAMA
-    // limpiarCampos();
 
     mostrarPersonas();
     botonRegistrar.setAttribute('style', 'visibility:visible !important;display:block !important');
@@ -170,6 +202,9 @@ function guardarRegistro(nombre){
             'success'
         )
     }
+        
+    // TENGO QUE DEBUGGEAR EL PORQUE SE BUGGEA CUANDO ESTA FUNCION SE LLAMA
+    // limpiarCampos();
 }
 
 
@@ -177,8 +212,8 @@ function guardarRegistro(nombre){
 formulario.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    const persona = new Persona(formulario.inlineRadioOptions.value, formulario.nombre.value, formulario.edad.value, formulario.fechaIngreso.value);
-
+    const persona = new Persona(formulario.inlineRadioOptions.value, formulario.nombre.value, formulario.edad.value, formulario.fechaIngreso.value, formulario.pais.value);
+    console.log(persona)
     personas.push(persona);
 
     if (persona) {
